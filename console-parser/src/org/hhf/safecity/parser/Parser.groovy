@@ -22,7 +22,7 @@ public class Parser
 
 	public static void main(String[] args)
 	{
-		new Parser(new ArgParser(args).parse()).run();
+		new Parser(new ArgParser(args).links()).run();
 	}
 
 	private void run()

@@ -35,3 +35,15 @@ xmlrpc.php
 /profiles
 /scripts
 /themes
+
+# Ignore .out
+.out
+
+# Ignore raw data
+*.csv
+
+# Ignore Idea staff
+.idea
+*.iml
+*.eml
+

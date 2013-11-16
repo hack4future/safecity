@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/opendata-parser"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/commons-cli"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/groovy-2.1.9"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/jsoup"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>

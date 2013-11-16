@@ -12,8 +12,8 @@ class ParserService {
     private static final Logger log = LoggerFactory.getLogger(ParserService.class)
 
     PreparedData parse(Document doc) {
-        def preparedData = Parser.prepare(doc)
-        return preparedData
+        def data = Parser.parse(doc)
+        return data
     }
 
     File createOutputCsv(PreparedData data) {

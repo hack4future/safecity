@@ -8,7 +8,12 @@ import org.jsoup.nodes.Document
  */
 class Parser {
 
-    static PreparedData prepare(Document doc) {
+    static PreparedData parse(Document doc) {
+        return prepare(doc)
+        //TODO next stage -> mapping
+    }
+
+    static private PreparedData prepare(Document doc) {
         def data = new PreparedData()
 
         data.pubDate = doc.select('.ndate').text()

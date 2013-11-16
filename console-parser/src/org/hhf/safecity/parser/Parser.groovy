@@ -1,12 +1,10 @@
 package org.hhf.safecity.parser
-
 import opendataparser.CsvDriver
 import opendataparser.ParserData
 import opendataparser.ParserService
-import org.jsoup.nodes.Document
+import org.jsoup.Jsoup
 
 import static java.util.Arrays.asList
-
 /**
  * User: Ilya Arkhanhelsky
  * Date: 16.11.13
@@ -48,6 +46,6 @@ public class Parser
 
 	private static ParserData parse(String link)
 	{
-		   new ParserService().parse(new Document(link));
+		   new ParserService().parse(Jsoup.connect(link).execute().parse());
 	}
 }

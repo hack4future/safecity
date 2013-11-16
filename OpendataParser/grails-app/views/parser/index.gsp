@@ -35,7 +35,7 @@
                 <th>${it}</th>
             </g:each>
         </tr>
-        <g:each in="${data.getRows()}" var="row">
+        <g:each in="${data.tableRows}" var="row">
             <tr>
                 <g:each in="${row}">
                     <td>${it}</td>
@@ -49,7 +49,7 @@
 <g:if test="${outputFileName}">
     <br/>
     <g:link action="downloadCSV" params="[fileName: outputFileName]">
-        Download .CSV
+        Show .CSV
     </g:link>
 </g:if>
 

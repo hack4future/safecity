@@ -1,6 +1,6 @@
-package opendataparser
+package opendataparser.parser
 
-class ParserData {
+class PreparedData {
 
     private static final BLANK_FIELD_MARK = '-'
 
@@ -10,26 +10,30 @@ class ParserData {
 
     /**
      * Use this method to add row
-     * @param row
      */
     void addRow(List<String> row) {
+        tableRows << deMergeRow(row)
+    }
+
+    void prepare() {
+        fillEmptyRows()
+    }
+
+    /**
+     * Fills merged rows [rowspan]
+     */
+    private List<String> deMergeRow(List<String> row) {
         int diff = columnsNames.size() - row.size()
         if (diff > 0) {
             diff.times {
                 row.add(0, BLANK_FIELD_MARK)
             }
         }
-        tableRows << row
-    }
-
-    List<List<String>> getRows() {
-        fillEmptyRows()
-        return tableRows
+        return row
     }
 
     /**
      * Fills blank rows before getting
-     * @return
      */
     private void fillEmptyRows() {
         def tmp = tableRows.first()

@@ -7,12 +7,10 @@ class ParserController {
     def parserService
 
     def index = {
-        return [data: '']
+        return [data: null]
     }
 
     def parseUrl = {
-//        def url = "http://mchs.gov.by/rus/main/ministry/regional_management/str_minsk/news_minsk/~page__m22=1~news__m22=20056"
-
         def data = parserService.parse(Jsoup.connect(params.url as String).get())
 
         render(view: 'index', model: [data: data])
@@ -24,6 +22,9 @@ class ParserController {
         f.transferTo(file)
 
         def data = parserService.parse(Jsoup.parse(file, "UTF-8"))
+        if(!data) {
+            flash.error = 'No data or bad format :('
+        }
 
         render(view: 'index', model: [data: data])
     }

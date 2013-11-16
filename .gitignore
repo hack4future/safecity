@@ -35,3 +35,11 @@ xmlrpc.php
 /profiles
 /scripts
 /themes
+
+# Ignore pycharm staff
+.idea
+
+# Ignore Py chache
+__pychache__
+
+*.pyc

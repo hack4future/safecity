@@ -5,5 +5,5 @@
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/jsoup"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/slf4j"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/groovy-2.1.9"/>
-	<classpathentry kind="output" path="/home/dm/Projects/my/safecity/.out/production/opendata-parser"/>
+	<classpathentry kind="output" path="bin"/>
 </classpath>

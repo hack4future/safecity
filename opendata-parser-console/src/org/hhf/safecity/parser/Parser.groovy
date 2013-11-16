@@ -1,7 +1,6 @@
 package org.hhf.safecity.parser
 
 import opendataparser.CsvDriver
-import opendataparser.ParserService
 import opendataparser.parser.PreparedData
 import org.jsoup.Jsoup
 
@@ -39,7 +38,6 @@ public class Parser
 	private static void write(File file, PreparedData parse)
 	{
 		CsvDriver.write(file, parse.tableRows, parse.columnsNames);
-
 	}
 
 	private static String makeFilename(String date)
@@ -49,6 +47,6 @@ public class Parser
 
 	private static PreparedData parse(String link)
 	{
-		return new ParserService().parse(Jsoup.connect(link).execute().parse());
+		return new ParserWrapper().parse(Jsoup.connect(link).execute().parse());
 	}
 }

@@ -6,7 +6,7 @@ import org.jsoup.nodes.Document
  * User: pyotruk
  * Date: 2013-11-16
  */
-class Parser {
+public class Parser {
 
     static PreparedData parse(Document doc) {
         return prepare(doc)

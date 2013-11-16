@@ -4,5 +4,7 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/opendata-parser"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/commons-cli"/>
-	<classpathentry kind="output" path="/.out/production/opendata-parser-console"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/groovy-2.1.9"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/jsoup"/>
+	<classpathentry kind="output" path="bin"/>
 </classpath>

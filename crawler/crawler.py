@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from dateutil.rrule import rrule, MONTHLY, DAILY
+from dateutil.rrule import rrule, MONTHLY
 import mechanize
 from BeautifulSoup import BeautifulSoup
 from utils import flatten
@@ -49,5 +49,8 @@ def browser_setup(browser):
 
 def crawl(service, from_date, to_date):
     return flatten(
-        [crawl_month(browser_setup(mechanize.Browser()), '/'.join([service.base_url, month_url])) for month_url in
-         expand_dates(month_url_format=service.month_url, from_date=from_date, to_date=to_date)])
+        [
+            crawl_month(browser_setup(mechanize.Browser()), '/'.join([service.base_url, month_url]), service.enc)
+            for month_url in expand_dates(month_url_format=service.month_url, from_date=from_date, to_date=to_date)
+        ]
+    )

@@ -7,3 +7,4 @@ Crawler script for fetching links with daily summary.
 * Python 2.7 (as dependency of Mechanize)
 * Mechanize
 * BeautifulSoup
+* Argparse

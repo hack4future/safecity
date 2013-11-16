@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from dateutil.rrule import rrule, MONTHLY
 import mechanize
 from BeautifulSoup import BeautifulSoup
@@ -23,7 +24,10 @@ def expand_pages(pages_block):
 def crawl_page(browser, url, expected_enc):
     html = browser.open(url).read().decode(expected_enc)
     soup = BeautifulSoup(html)
-    return [block.a['href'] for block in soup.findAll('div', attrs={'class': 'nitm'})]
+    return [block.a['href'] for block in soup.findAll('div', attrs={'class': 'nitm'}) if
+            reduce(lambda x, y: x or y,
+                   [block.h3.renderContents() == s for s in ['Суточная сводка', 'Cуточна сводка', 'СУТОЧНАЯ СВОДКА']],
+                   False)]
 
 
 def crawl_month(browser, url, expected_enc='cp1251'):
@@ -45,5 +49,8 @@ def browser_setup(browser):
 
 def crawl(service, from_date, to_date):
     return flatten(
-        [crawl_month(browser_setup(mechanize.Browser()), '/'.join([service.base_url, month_url])) for month_url in
-         expand_dates(month_url_format=service.month_url, from_date=from_date, to_date=to_date)])
+        [
+            crawl_month(browser_setup(mechanize.Browser()), '/'.join([service.base_url, month_url]), service.enc)
+            for month_url in expand_dates(month_url_format=service.month_url, from_date=from_date, to_date=to_date)
+        ]
+    )

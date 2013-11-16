@@ -4,6 +4,8 @@ import org.jsoup.nodes.Document
 
 class ParserService {
 
+    private final static OUTPUT_FILE_DIR = '/tmp/'
+
     ParserData parse(Document doc) {
         def data = new ParserData()
 
@@ -30,5 +32,14 @@ class ParserService {
         }
 
         return data
+    }
+
+    File createOutputCsv(ParserData data) {
+        if(!data) {
+            return nullf
+        }
+        def f = new File("${OUTPUT_FILE_DIR}opendata-parser-${System.currentTimeMillis()}.csv")
+        CsvDriver.write(f, data.getRows(), data.getColumnsNames())
+        return f
     }
 }

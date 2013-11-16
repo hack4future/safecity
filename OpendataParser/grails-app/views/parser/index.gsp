@@ -46,5 +46,12 @@
 </g:if>
 <g:else>${flash.error}</g:else>
 
+<g:if test="${outputFileName}">
+    <br/>
+    <g:link action="downloadCSV" params="[fileName: outputFileName]">
+        Download .CSV
+    </g:link>
+</g:if>
+
 </body>
 </html>

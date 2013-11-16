@@ -15,7 +15,7 @@
 </head>
 <body>
 
-<g:form action="parseUrl">
+<g:form action="parseUrl" method="GET">
     <input type="text" name="url" value="" placeholder="url"/>
     <g:submitButton name="parseUrl" value="parseUrl"/>
 </g:form>
@@ -35,7 +35,7 @@
                 <th>${it}</th>
             </g:each>
         </tr>
-        <g:each in="${data.tableRows}" var="row">
+        <g:each in="${data.getRows()}" var="row">
             <tr>
                 <g:each in="${row}">
                     <td>${it}</td>

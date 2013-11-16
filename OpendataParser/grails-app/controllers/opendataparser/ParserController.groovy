@@ -14,12 +14,18 @@ class ParserController {
 
     def parseUrl = {
         def data = parserService.parse(Jsoup.connect(params.url as String).get())
+        def outputFileName = parserService.createOutputCsv(data)?.name
 
         if (!data) {
             flash.error = 'No data or bad format :('
         }
 
-        render(view: 'index', model: [data: data, outputFileName: parserService.createOutputCsv(data)?.name])
+        if(params.format == 'csv') {
+            redirect(action: 'downloadCSV', params: [fileName: outputFileName])
+
+        } else {
+            render(view: 'index', model: [data: data, outputFileName: outputFileName])
+        }
     }
 
     def parseFile = {

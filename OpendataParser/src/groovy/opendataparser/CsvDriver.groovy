@@ -1,8 +1,23 @@
 package opendataparser
 
+import opendataparser.parser.MappedDataItem
+
 class CsvDriver {
 
     private final static SEPARATOR = ';'
+
+    static String write(File file, List<MappedDataItem> data)
+    throws IllegalArgumentException {
+        def d = []
+        data.each { item ->
+            def row = []
+            item.dataMap.each {
+                row << it.value
+            }
+            d << row
+        }
+        return write(file, d, data.first().dataMap.keySet() as List)
+    }
 
     static String write(File file, List<List<String>> data, List columnsNames)
     throws IllegalArgumentException {

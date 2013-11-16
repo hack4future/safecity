@@ -3,10 +3,6 @@
 <head>
     <title></title>
     <style type="text/css">
-        .pub-date {
-            font-weight: bold;
-            color: red;
-        }
         table {
             border-collapse: collapse;
         }
@@ -17,6 +13,7 @@
 
 <g:form action="parseUrl" method="GET">
     <input type="text" name="url" value="" placeholder="url"/>
+    <g:select name="format" from="['---', 'csv']" value="---"/>
     <g:submitButton name="parseUrl" value="parseUrl"/>
 </g:form>
 
@@ -26,18 +23,16 @@
 </g:uploadForm>
 
 <g:if test="${data}">
-    <div class="pub-date">${data.pubDate}</div>
-
-    <h2>Пожары (прочие)</h2>
+    <h2>Пожары</h2>
     <table border="1">
         <tr>
-            <g:each in="${data.columnsNames}">
+            <g:each in="${data.first().dataMap.keySet()}">
                 <th>${it}</th>
             </g:each>
         </tr>
-        <g:each in="${data.tableRows}" var="row">
+        <g:each in="${data}" var="row">
             <tr>
-                <g:each in="${row}">
+                <g:each in="${row.dataMap.values()}">
                     <td>${it}</td>
                 </g:each>
             </tr>

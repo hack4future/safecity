@@ -8,9 +8,11 @@ import org.jsoup.nodes.Document
  */
 class Parser {
 
-    static PreparedData parse(Document doc) {
-        return prepare(doc)
-        //TODO next stage -> mapping
+    static List<MappedDataItem> parse(Document doc) {
+        def preparedData = prepare(doc)
+        def mappedData = prepareMapped(preparedData)
+        return mappedData
+        //TODO next stage -> normalization
     }
 
     static private PreparedData prepare(Document doc) {
@@ -44,6 +46,30 @@ class Parser {
         data.prepare()
 
         return data
+    }
+
+    static private List<MappedDataItem> prepareMapped(PreparedData data) {
+        def res = []
+
+        data.tableRows.each { row ->
+            def item = new MappedDataItem(date: Date.parse('dd.MM.yyyy', data.pubDate))
+
+            row.eachWithIndex { String cell, int i ->
+                def key = MappedDataItem.dataMapping.find { map ->
+                    map.value.find { data.columnsNames[i].toLowerCase().contains(it) }
+                }?.key
+                if(key) {
+                    if(item."$key") {
+                        item."$key" += cell
+                    } else {
+                        item."$key" = cell
+                    }
+                }
+            }
+            res << item
+        }
+
+        return res
     }
 
 

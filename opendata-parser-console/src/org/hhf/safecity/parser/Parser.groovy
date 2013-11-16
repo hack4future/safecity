@@ -1,10 +1,12 @@
 package org.hhf.safecity.parser
+
 import opendataparser.CsvDriver
-import opendataparser.ParserData
 import opendataparser.ParserService
+import opendataparser.parser.PreparedData
 import org.jsoup.Jsoup
 
 import static java.util.Arrays.asList
+
 /**
  * User: Ilya Arkhanhelsky
  * Date: 16.11.13
@@ -29,14 +31,14 @@ public class Parser
 	{
 		for (String link : links)
 		{
-			ParserData data = parse(link)
+			PreparedData data = parse(link);
 			write(new File(makeFilename(data.pubDate)), data);
 		}
 	}
 
-	private static void write(File file, ParserData parse)
+	private static void write(File file, PreparedData parse)
 	{
-		CsvDriver.write(file, parse.getRows(), parse.getColumnsNames());
+		CsvDriver.write(file, parse.tableRows, parse.columnsNames);
 
 	}
 
@@ -45,8 +47,8 @@ public class Parser
 		return String.format("sum-%s.csv", date);
 	}
 
-	private static ParserData parse(String link)
+	private static PreparedData parse(String link)
 	{
-		   new ParserService().parse(Jsoup.connect(link).execute().parse());
+		return new ParserService().parse(Jsoup.connect(link).execute().parse());
 	}
 }

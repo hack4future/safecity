@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/opendata-parser"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/commons-cli"/>
+	<classpathentry kind="output" path="/.out/production/opendata-parser-console"/>
+</classpath>

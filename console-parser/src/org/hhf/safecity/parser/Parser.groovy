@@ -29,7 +29,8 @@ public class Parser
 	{
 		for (String link : links)
 		{
-			write(new File(makeFilename(link)), parse(link));
+			ParserData data = parse(link)
+			write(new File(makeFilename(data.pubDate)), data);
 		}
 	}
 
@@ -39,9 +40,9 @@ public class Parser
 
 	}
 
-	private static String makeFilename(String link)
+	private static String makeFilename(String date)
 	{
-		return "test-" + Integer.toHexString(link.hashCode()) + ".csv";
+		return String.format("sum-%s.csv", date);
 	}
 
 	private static ParserData parse(String link)

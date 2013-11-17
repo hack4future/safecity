@@ -106,6 +106,7 @@ if __name__ == '__main__':
         logger.addHandler(logging.FileHandler('crawler.log'))
 
     logger.info('...Start')
+ 
     crawled = crawl(service=FireService,
                     from_date=date.fromtimestamp(mktime(strptime(n.start, '%Y-%m-%d'))),
                     to_date=date.fromtimestamp(mktime(strptime(n.end, '%Y-%m-%d'))))

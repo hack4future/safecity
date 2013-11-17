@@ -98,8 +98,7 @@ if __name__ == '__main__':
         logger.addHandler(logging.FileHandler('crawler.log'))
 
     logger.info('...Start')
-    print('\n'.join(
-        crawl(service=FireService,
-              from_date=date.fromtimestamp(mktime(strptime(n.start, '%Y-%m-%d'))),
-              to_date=date.fromtimestamp(mktime(strptime(n.end, '%Y-%m-%d')))
-        )))
+    for url in crawl(service=FireService,
+      from_date=date.fromtimestamp(mktime(strptime(n.start, '%Y-%m-%d'))),
+      to_date=date.fromtimestamp(mktime(strptime(n.end, '%Y-%m-%d')))):
+        print(url)

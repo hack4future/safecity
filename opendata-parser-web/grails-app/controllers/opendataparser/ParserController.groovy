@@ -13,18 +13,20 @@ class ParserController {
     }
 
     def parseUrl = {
-        def data = parserService.parse(Jsoup.connect(params.url as String).get())
-        def outputFileName = parserService.createOutputCsv(data)?.name
+        def cachedHolder = parserService.parse(Jsoup.connect(params.url as String).get())
 
-        if (!data) {
+        if (!cachedHolder?.data) {
             flash.error = 'No data or bad format :('
         }
 
         if(params.format == 'csv') {
-            redirect(action: 'downloadCSV', params: [fileName: outputFileName])
+            redirect(action: 'downloadCSV', params: [fileName: cachedHolder?.outputFileName])
 
         } else {
-            render(view: 'index', model: [data: data, outputFileName: outputFileName])
+            render(view: 'index', model: [
+                    data: cachedHolder?.data,
+                    outputFileName: cachedHolder?.outputFileName
+            ])
         }
     }
 
@@ -33,13 +35,13 @@ class ParserController {
         File file = new File("${TMP_DIR}opendataparser.tmp")
         f.transferTo(file)
 
-        def data = parserService.parse(Jsoup.parse(file, "UTF-8"))
+        def cachedHolder = parserService.parse(Jsoup.parse(file, "UTF-8"), true)
 
-        if (!data) {
+        if (!cachedHolder?.data) {
             flash.error = 'No data or bad format :('
         }
 
-        render(view: 'index', model: [data: data, outputFileName: parserService.createOutputCsv(data)?.name])
+        render(view: 'index', model: [data: cachedHolder?.data, outputFileName: cachedHolder?.outputFileName])
     }
 
     def downloadCSV = {

@@ -1,12 +1,12 @@
 package opendataparser
 
-import opendataparser.parser.MappedDataItem
+import opendataparser.parser.NormalizedDataItem
 
 class CsvDriver {
 
     private final static SEPARATOR = ';'
 
-    static String write(File file, List<MappedDataItem> data)
+    static String write(File file, List<NormalizedDataItem> data)
     throws IllegalArgumentException {
         def d = []
         data.each { item ->

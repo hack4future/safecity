@@ -6,6 +6,10 @@ from BeautifulSoup import BeautifulSoup
 from utils import flatten
 
 
+import logging
+logger = logging.getLogger()
+
+
 def expand_dates(month_url_format, from_date, to_date):
     return [d.strftime(month_url_format) for d in iter(rrule(MONTHLY, dtstart=from_date, until=to_date))]
 
@@ -34,11 +38,17 @@ def crawl_page(browser, url, expected_enc):
 def crawl_month(browser, url, expected_enc='cp1251'):
     """'Crawls over every page in paging block '"""
 
+    logger.info('...Crawling Month %s' % url)
+
     html = browser.open(url).read().decode(expected_enc)
     soup = BeautifulSoup(html)
 
-    return [crawl_page(browser, page_url, expected_enc) for page_url in
-            expand_pages(check_one_and_only(soup.findAll('div', attrs={'class': 'paging'})))]
+    page_urls = expand_pages(check_one_and_only(soup.findAll('div', attrs={'class': 'paging'})))
+    result = []
+    for idx, url in enumerate(page_urls):
+        logger.info('...Crawling Page [%s/%s] %s' % (idx+1, len(page_urls), url))
+        result.append(crawl_page(browser, url, expected_enc))
+    return result
 
 
 def browser_setup(browser):
@@ -66,21 +76,23 @@ if __name__ == '__main__':
 
     parser = ArgumentParser(
         prog='crawler (open data)',
-        usage='crawler --from-date=[FROM_DATE] --to-date=[TO_DATE]',
+        usage='crawler --start=YYYY-MM-DD --end=YYYY-MM-DD',
         description='Crawler script for fetching links with daily summary.'
     )
 
-    parser.add_argument('--from-date', help='Start date for fetching. In YYYY-MM-DD format')
-    parser.add_argument('--to-date', help='End date for fetching. In YYYY-MM-DD format')
+    parser.add_argument('--start', help='Start date for fetching. In YYYY-MM-DD format')
+    parser.add_argument('--end', help='End date for fetching. In YYYY-MM-DD format')
 
     n = parser.parse_args(sys.argv[1:])
 
-    if not n.from_date or not n.to_date:
+    if not n.start or not n.end:
         parser.print_help()
         sys.exit(-1)
 
+    logging.basicConfig(level=logging.INFO)
+    logger.info('...Start')
     print('\n'.join(
         crawl(service=FireService,
-              from_date=date.fromtimestamp(mktime(strptime(n.from_date, '%Y-%m-%d'))),
-              to_date=date.fromtimestamp(mktime(strptime(n.to_date, '%Y-%m-%d')))
+              from_date=date.fromtimestamp(mktime(strptime(n.start, '%Y-%m-%d'))),
+              to_date=date.fromtimestamp(mktime(strptime(n.end, '%Y-%m-%d')))
         )))

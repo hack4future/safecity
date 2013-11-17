@@ -78,6 +78,7 @@ if __name__ == '__main__':
     from datetime import date, time
     from time import mktime, strptime
     import sys
+    import json
     from services import FireService
     from argparse import ArgumentParser
 
@@ -109,8 +110,5 @@ if __name__ == '__main__':
                     from_date=date.fromtimestamp(mktime(strptime(n.start, '%Y-%m-%d'))),
                     to_date=date.fromtimestamp(mktime(strptime(n.end, '%Y-%m-%d'))))
 
-    print('[')
-    for k in crawled.keys():
-        print('{\'date\': \'%s\', \'url\' : \'%s\'}\n' % (k, crawled[k]))
-
-    print(']')
+    result = [{'date': k, 'url': crawled[k]} for k in crawled.keys()]
+    print(json.dumps(result, indent=2))

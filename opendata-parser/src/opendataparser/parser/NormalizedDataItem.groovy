@@ -6,6 +6,7 @@ package opendataparser.parser
  */
 class NormalizedDataItem {
 
+    String GUID
     Date date
     String type // type of accident
     String district
@@ -19,6 +20,7 @@ class NormalizedDataItem {
 
     Map getDataMap() {
         return [
+                'GUID': GUID,
                 'date': date.format('yyyy-MM-dd'),
                 'type': type,
                 'district': district,

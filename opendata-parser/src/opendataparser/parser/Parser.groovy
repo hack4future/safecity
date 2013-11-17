@@ -4,6 +4,7 @@ import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
+import static java.util.UUID.randomUUID
 
 /**
  * User: pyotruk
@@ -124,6 +125,8 @@ class Parser {
             def geoPoint = geocode("город Минск, ${normItem.street}, ${normItem.building}")
             normItem.latitude = geoPoint.latitude
             normItem.longitude = geoPoint.longitude
+
+            normItem.GUID = randomUUID() as String
 
             res << normItem
         }

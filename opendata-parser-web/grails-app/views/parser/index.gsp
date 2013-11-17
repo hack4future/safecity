@@ -1,12 +1,15 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
 <html>
 <head>
-    <title></title>
+    <meta name="layout" content="base" />
     <style type="text/css">
-        table {
-            border-collapse: collapse;
+        .csv {
+            font-size: 20px;
+            display: inline-block;
+            padding: 6px;
+            border: 2px solid #00F;
+            text-decoration: none;
         }
-
     </style>
 </head>
 <body>
@@ -43,7 +46,7 @@
 
 <g:if test="${outputFileName}">
     <br/>
-    <g:link action="downloadCSV" params="[fileName: outputFileName]">
+    <g:link action="downloadCSV" params="[fileName: outputFileName]" class="csv" target="_blank">
         Show .CSV
     </g:link>
 </g:if>

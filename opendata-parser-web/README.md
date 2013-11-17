@@ -26,8 +26,7 @@ Input.
 3) file - you can upload file (.html) to parse;
 
 Output.
-Returns parsed data as table or as .csv.
-Output data mapped by three columns: 'date', 'address', 'description'.
+Returns parsed and normalized data as table or as .csv.
 
 API.
 Use it for sending automatic requests.

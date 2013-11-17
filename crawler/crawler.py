@@ -5,8 +5,8 @@ import mechanize
 from BeautifulSoup import BeautifulSoup
 from utils import flatten
 
-
 import logging
+
 logger = logging.getLogger()
 
 
@@ -22,7 +22,7 @@ def check_one_and_only(param):
 
 
 def expand_pages(pages_block):
-    """Expands pages from provided pages block. Actualy we need only td's"""
+    """Expands pages from provided pages block. Actually we need only td's"""
     return [td.a['href'] for td in pages_block.findAll('td')]
 
 
@@ -46,7 +46,7 @@ def crawl_month(browser, url, expected_enc='cp1251'):
     page_urls = expand_pages(check_one_and_only(soup.findAll('div', attrs={'class': 'paging'})))
     result = []
     for idx, url in enumerate(page_urls):
-        logger.info('...Crawling Page [%s/%s] %s' % (idx+1, len(page_urls), url))
+        logger.info('...Crawling Page [%s/%s] %s' % (idx + 1, len(page_urls), url))
         result.append(crawl_page(browser, url, expected_enc))
     return result
 
@@ -82,6 +82,9 @@ if __name__ == '__main__':
 
     parser.add_argument('--start', help='Start date for fetching. In YYYY-MM-DD format')
     parser.add_argument('--end', help='End date for fetching. In YYYY-MM-DD format')
+    parser.add_argument('--verbose', action='store_false',
+                        default=False,
+                        help='Verbose to stdout if set, else to log file.')
 
     n = parser.parse_args(sys.argv[1:])
 
@@ -89,7 +92,11 @@ if __name__ == '__main__':
         parser.print_help()
         sys.exit(-1)
 
-    logging.basicConfig(level=logging.INFO)
+    if not n.verbose:
+        logging.basicConfig(level=logging.INFO)
+        # TODO: Change this value for something better
+        logger.addHandler(logging.FileHandler('crawler.log'))
+
     logger.info('...Start')
     print('\n'.join(
         crawl(service=FireService,

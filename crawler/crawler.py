@@ -1,13 +1,25 @@
 #!/usr/bin/python2
 # -*- coding: utf-8 -*-
+import os
+
 from dateutil.rrule import rrule, MONTHLY
 import mechanize
 from BeautifulSoup import BeautifulSoup
 from utils import flatten
 
-import logging
+try:
+    import urllib2
+except ImportError:
+    import urllib.request as urllib2
 
+
+import logging
 logger = logging.getLogger()
+
+
+ROOT = os.path.abspath(os.path.dirname(__file__))
+CACHE = ROOT + '/__cached__/'
+PARSER =  "http://54.200.194.23/parser/parser/parseUrl?format=csv&url="
 
 
 def expand_dates(month_url_format, from_date, to_date):
@@ -73,6 +85,19 @@ def crawl(service, from_date, to_date):
 
     return reduce(lambda x, y: dict(x.items() + y.items()), flatten(dicts), {})
 
+def cached_fetch(yyyymmdd, url):
+    if not os.path.exists(CACHE):
+        os.makedirs(CACHE)
+    filename = CACHE + yyyymmdd + '.csv'
+    if os.path.exists(filename):
+        logger.info('..(cached) %s' % filename)
+        content = open(filename,'rb').read()
+    else:
+        logger.info('..(fetching) %s' % filename)
+        
+        content = urllib2.urlopen(PARSER + url).read()
+        open(filename, 'wb').write(content)
+    return content
 
 if __name__ == '__main__':
     from datetime import date, time
@@ -106,10 +131,19 @@ if __name__ == '__main__':
         logger.addHandler(logging.FileHandler('crawler.log'))
 
     logger.info('...Start')
- 
+
+    # crawled is a dict date:url
     crawled = crawl(service=FireService,
                     from_date=date.fromtimestamp(mktime(strptime(n.start, '%Y-%m-%d'))),
                     to_date=date.fromtimestamp(mktime(strptime(n.end, '%Y-%m-%d'))))
 
-    result = [{'date': k, 'url': crawled[k]} for k in crawled.keys()]
-    print(json.dumps(result, indent=2))
+    #result = [{'date': k, 'url': crawled[k]} for k in crawled.keys()]
+    #print(json.dumps(result, indent=2))
+
+    for date, url in crawled.items():
+        if date >= n.start and date <= n.end:
+            cached_fetch(date, url)
+
+   
+    #cached_fetch('12333', 'http://mchs.gov.by/rus/main/ministry/regional_management/str_minsk/news_minsk/~year__m22=2013~month__m22=2~page__m22=3~news__m22=12984')
+        

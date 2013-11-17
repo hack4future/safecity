@@ -29,10 +29,17 @@ def expand_pages(pages_block):
 def crawl_page(browser, url, expected_enc):
     html = browser.open(url).read().decode(expected_enc)
     soup = BeautifulSoup(html)
-    return [block.a['href'] for block in soup.findAll('div', attrs={'class': 'nitm'}) if
-            reduce(lambda x, y: x or y,
-                   [block.h3.renderContents() == s for s in ['Суточная сводка', 'Cуточна сводка', 'СУТОЧНАЯ СВОДКА']],
-                   False)]
+
+    link_dict = {}
+    for block in soup.findAll('div', attrs={'class': 'nitm'}):
+        if reduce(lambda x, y: x or y,
+                  [s in block.h3.renderContents() for s in ['Суточная сводка', 'Cуточна сводка', 'СУТОЧНАЯ СВОДКА']],
+                  False):
+            d = date.fromtimestamp(
+                mktime(strptime(block.find('div', attrs={'class': 'ndate'}).renderContents(), '%d.%m.%Y')))
+            link_dict[d.strftime('%Y-%m-%d')] = block.a['href']
+
+    return link_dict
 
 
 def crawl_month(browser, url, expected_enc='cp1251'):
@@ -59,16 +66,16 @@ def browser_setup(browser):
 
 
 def crawl(service, from_date, to_date):
-    return flatten(
-        [
-            crawl_month(browser_setup(mechanize.Browser()), '/'.join([service.base_url, month_url]), service.enc)
-            for month_url in expand_dates(month_url_format=service.month_url, from_date=from_date, to_date=to_date)
-        ]
-    )
+    dicts = [
+        crawl_month(browser_setup(mechanize.Browser()), '/'.join([service.base_url, month_url]), service.enc)
+        for month_url in expand_dates(month_url_format=service.month_url, from_date=from_date, to_date=to_date)
+    ]
+
+    return reduce(lambda x, y: dict(x.items() + y.items()), flatten(dicts), {})
 
 
 if __name__ == '__main__':
-    from datetime import date
+    from datetime import date, time
     from time import mktime, strptime
     import sys
     from services import FireService
@@ -98,8 +105,12 @@ if __name__ == '__main__':
         logger.addHandler(logging.FileHandler('crawler.log'))
 
     logger.info('...Start')
-    print('\n'.join(
-        crawl(service=FireService,
-              from_date=date.fromtimestamp(mktime(strptime(n.start, '%Y-%m-%d'))),
-              to_date=date.fromtimestamp(mktime(strptime(n.end, '%Y-%m-%d')))
-        )))
+    crawled = crawl(service=FireService,
+                    from_date=date.fromtimestamp(mktime(strptime(n.start, '%Y-%m-%d'))),
+                    to_date=date.fromtimestamp(mktime(strptime(n.end, '%Y-%m-%d'))))
+
+    print('[')
+    for k in crawled.keys():
+        print('{\'date\': \'%s\', \'url\' : \'%s\'}\n' % (k, crawled[k]))
+
+    print(']')

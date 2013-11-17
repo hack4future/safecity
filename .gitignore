@@ -1,3 +1,6 @@
+# Ignore compiled Python files
+*.pyc
+
 # Ignore configuration files that may contain sensitive information.
 sites/*/*settings*.php
 
@@ -36,10 +39,13 @@ xmlrpc.php
 /scripts
 /themes
 
-# Ignore pycharm staff
+# Ignore .out
+.out
+
+# Ignore raw data
+*.csv
+
+# Ignore Idea staff
 .idea
-
-# Ignore Py chache
-__pychache__
-
-*.pyc
+*.iml
+*.eml

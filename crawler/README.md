@@ -2,10 +2,16 @@
 
 Crawler script for fetching links with daily summary.
 
-# Deps
+# Requirements
 
-* Python 2.7 (as dependency of Mechanize)
+* Python 2.7
+* pip
+
 * Mechanize
 * BeautifulSoup
-* Argparse
+* python-dateutil
+
+# Installation with pip
+
+pip install -r requirements.txt
 

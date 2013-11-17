@@ -27,7 +27,6 @@ def expand_pages(pages_block):
 
 
 def crawl_page(browser, url, expected_enc):
-    logger.info('...Crawling Page %s' % url)
     html = browser.open(url).read().decode(expected_enc)
     soup = BeautifulSoup(html)
     return [block.a['href'] for block in soup.findAll('div', attrs={'class': 'nitm'}) if
@@ -44,8 +43,12 @@ def crawl_month(browser, url, expected_enc='cp1251'):
     html = browser.open(url).read().decode(expected_enc)
     soup = BeautifulSoup(html)
 
-    return [crawl_page(browser, page_url, expected_enc) for page_url in
-            expand_pages(check_one_and_only(soup.findAll('div', attrs={'class': 'paging'})))]
+    page_urls = expand_pages(check_one_and_only(soup.findAll('div', attrs={'class': 'paging'})))
+    result = []
+    for idx, url in enumerate(page_urls):
+        logger.info('...Crawling Page [%s/%s] %s' % (idx+1, len(page_urls), url))
+        result.append(crawl_page(browser, url, expected_enc))
+    return result
 
 
 def browser_setup(browser):

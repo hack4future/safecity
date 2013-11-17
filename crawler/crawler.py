@@ -1,3 +1,4 @@
+#!/usr/bin/python2
 # -*- coding: utf-8 -*-
 from dateutil.rrule import rrule, MONTHLY
 import mechanize
@@ -54,3 +55,32 @@ def crawl(service, from_date, to_date):
             for month_url in expand_dates(month_url_format=service.month_url, from_date=from_date, to_date=to_date)
         ]
     )
+
+
+if __name__ == '__main__':
+    from datetime import date
+    from time import mktime, strptime
+    import sys
+    from services import FireService
+    from argparse import ArgumentParser
+
+    parser = ArgumentParser(
+        prog='crawler (open data)',
+        usage='crawler --from-date=[FROM_DATE] --to-date=[TO_DATE]',
+        description='Crawler script for fetching links with daily summary.'
+    )
+
+    parser.add_argument('--from-date', help='Start date for fetching. In YYYY-MM-DD format')
+    parser.add_argument('--to-date', help='End date for fetching. In YYYY-MM-DD format')
+
+    n = parser.parse_args(sys.argv[1:])
+
+    if not n.from_date or not n.to_date:
+        parser.print_help()
+        sys.exit(-1)
+
+    print('\n'.join(
+        crawl(service=FireService,
+              from_date=date.fromtimestamp(mktime(strptime(n.from_date, '%Y-%m-%d'))),
+              to_date=date.fromtimestamp(mktime(strptime(n.to_date, '%Y-%m-%d')))
+        )))

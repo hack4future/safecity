@@ -9,7 +9,7 @@ Crawler script for fetching links with daily summary.
 
 * Mechanize
 * BeautifulSoup
-* python-dateutul
+* python-dateutil
 
 # Installation with pip
 

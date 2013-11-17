@@ -88,3 +88,89 @@ selected from existing limited set, but probably typed
 manually. There should be a form for validation/import of
 manual data, so that operator can get automatic feedback
 from the system.
+
+
+Safe City project structure
+===========================
+
+[ ] Get data from MCHS site
+[ ] Transform data into useful format
+[ ] Build something awesome
+[ ] Export data in open format for other people
+
+[ ] Provide place for feedback: link to further works
+    based on open data, and for request to add new fields
+    and expand open data structures (new versions)
+    
+
+Technical: Workflow
+===================
+
+Data transformation process:
+
+    +--------+    +---------+    +---------+
+    | Order  |--->| Fetch   |--->| Parse   |--->
+    +--------+    +---------+    +---------+    
+
+    +--------+    +---------+    +---------+
+    | Map    |--->| Norm    |--->| Export  |--->
+    +--------+    +---------+    +---------+    
+
+    +--------+    +---------+    +---------+
+    | Read   |--->| Build   |--->| Render  |
+    +--------+    +---------+    +---------+    
+
+1. Order - form request to fetch for given date:
+
+   [ ] cron
+   [ ] user visit from site
+   [ ] explicitly filled form
+
+2. Fetch - detect address where the data resides:
+ 
+   [ ] configurable URL
+
+3. Parse - transform data into machine readable format:
+
+   [ ] split page into tables
+    [ ] detect table types by information type
+   [ ] different parsers for each table info type
+    [ ] different parsers for the same table info type
+    [ ] choose most suitable parser
+   [ ] validate result is correct
+   [ ] report result
+
+4. Map - map custom filed names into data field names
+
+5. Norm - normalize data is custom fiels names to be
+   in appropriate meaningful format. Normalize dates,
+   normalize addresses, reconcile (recover) missing
+   fields
+
+6. Export - output in CSV, XML, other cool formats
+
+7. Read - fetch CSV and other cool format info app
+
+8. Build - statistics, tables, diagrams, animation,
+   report
+
+9. Render - output HTML page, PDF, upload report, add
+   entry to DB
+
+
+Technical: Components
+=====================
+
+Order - [ ] Drupal Site Form
+Fetch - [ ] Drupal outpuing request
+     or [x] crawler (Python + libs in README.md)
+Parse - [x] OpendataParser (Java, Groovy, GRails, jsoup)
+Map   - [ ] OpendataParser
+Norm  - [ ] OpendataParser
+Export - [ ] OpendataParser
+Read  - [ ] crawler
+         [x] request to OpendataParser
+         [x] save to disk
+         [ ] return to Drupal
+Build - [ ] Drupal
+Render - [ ] Drupal

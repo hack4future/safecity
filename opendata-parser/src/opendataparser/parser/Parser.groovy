@@ -122,9 +122,16 @@ class Parser {
                 normItem.zhes = m.group(0)
             }
 
-            def geoPoint = geocode("город Минск, ${normItem.street}, ${normItem.building}")
-            normItem.latitude = geoPoint.latitude
-            normItem.longitude = geoPoint.longitude
+            try {
+                log.info("Geocoding executing...")
+                def geoPoint = geocode("город Минск, ${normItem.street}, ${normItem.building}")
+                normItem.latitude = geoPoint.latitude
+                normItem.longitude = geoPoint.longitude
+                log.info("Geocoding finished!")
+
+            } catch(Exception e) {
+                log.error("Geocoding FAILED", e)
+            }
 
             normItem.GUID = randomUUID() as String
 

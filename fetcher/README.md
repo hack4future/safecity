@@ -6,7 +6,7 @@ Script for fetching data from opendata-parser service. Using json file from craw
 Usage
 ======
 
-python2 fetcher.py <some_file.json>
+python2 fetcher.py %some_file.json%
 
 
 Required json format

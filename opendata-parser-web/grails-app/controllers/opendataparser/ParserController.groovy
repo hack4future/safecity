@@ -44,10 +44,10 @@ class ParserController {
 
     def downloadCSV = {
         def f = new File(TMP_DIR + (params.fileName as String))
-        if(f.exists()) {
+        if(f.isFile() && f.exists()) {
             render(contentType: 'text/plain', text: f.text)
         } else {
-            render(contentType: 'text/plain', text: 'File not found')
+            render(contentType: 'text/plain', text: '')
         }
     }
 }

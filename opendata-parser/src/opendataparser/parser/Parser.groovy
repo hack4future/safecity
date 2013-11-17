@@ -1,6 +1,8 @@
 package opendataparser.parser
 
 import org.jsoup.nodes.Document
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 
 /**
  * User: pyotruk
@@ -8,11 +10,27 @@ import org.jsoup.nodes.Document
  */
 class Parser {
 
+    private static final Logger log = LoggerFactory.getLogger(Parser.class)
+
     static List<MappedDataItem> parse(Document doc) {
+        log.info("Data preparing...")
         def preparedData = prepare(doc)
+        if(!preparedData) {
+            log.info("Bad data, failed when preparing.")
+            return null
+        }
+        log.info("Preparing finished successfully.")
+
         def mappedData = prepareMapped(preparedData)
-        return mappedData
+        log.info("Data has been mapped.")
+
+        mappedData = filterRows(mappedData)
+        log.info("Data rows has been filtered.")
+
         //TODO next stage -> normalization
+        log.info("Ready.")
+
+        return mappedData
     }
 
     static private PreparedData prepare(Document doc) {
@@ -43,6 +61,10 @@ class Parser {
             data.addRow(row)
         }
 
+        if(!data.isValid()) {
+            return null
+        }
+
         data.prepare()
 
         return data
@@ -60,7 +82,7 @@ class Parser {
                 }?.key
                 if(key) {
                     if(item."$key") {
-                        item."$key" += cell
+                        item."$key" += ',' + cell
                     } else {
                         item."$key" = cell
                     }
@@ -70,6 +92,12 @@ class Parser {
         }
 
         return res
+    }
+
+    static private List<MappedDataItem> filterRows(List<MappedDataItem> data) {
+        return data.grep {
+            !it.address.contains('Всего:')
+        }
     }
 
 

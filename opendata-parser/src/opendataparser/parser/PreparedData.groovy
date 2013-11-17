@@ -19,6 +19,12 @@ class PreparedData {
         fillEmptyRows()
     }
 
+    boolean isValid() {
+        if(!columnsNames) { return false }
+        if(!tableRows) { return false }
+        return true
+    }
+
     /**
      * Fills merged rows [rowspan]
      */

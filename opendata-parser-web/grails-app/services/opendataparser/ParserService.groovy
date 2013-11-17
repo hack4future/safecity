@@ -3,13 +3,10 @@ package opendataparser
 import opendataparser.parser.MappedDataItem
 import opendataparser.parser.Parser
 import org.jsoup.nodes.Document
-import org.slf4j.Logger
-import org.slf4j.LoggerFactory
 
 class ParserService {
 
     private final static OUTPUT_FILE_DIR = '/tmp/'
-    private static final Logger log = LoggerFactory.getLogger(ParserService.class)
 
     List<MappedDataItem> parse(Document doc) {
         def data = Parser.parse(doc)

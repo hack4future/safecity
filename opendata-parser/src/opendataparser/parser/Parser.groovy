@@ -1,5 +1,6 @@
 package opendataparser.parser
 
+import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -12,7 +13,7 @@ class Parser {
 
     private static final Logger log = LoggerFactory.getLogger(Parser.class)
 
-    static List<MappedDataItem> parse(Document doc) {
+    static List<NormalizedDataItem> parse(Document doc) {
         log.info("Data preparing...")
         def preparedData = prepare(doc)
         if(!preparedData) {
@@ -27,10 +28,11 @@ class Parser {
         mappedData = filterRows(mappedData)
         log.info("Data rows has been filtered.")
 
-        //TODO next stage -> normalization
+        def normalizedData = normalize(mappedData)
+        log.info("Data has been normalized.")
         log.info("Ready.")
 
-        return mappedData
+        return normalizedData
     }
 
     static private PreparedData prepare(Document doc) {
@@ -98,6 +100,45 @@ class Parser {
         return data.grep {
             !it.address.contains('Всего:')
         }
+    }
+
+    static private List<NormalizedDataItem> normalize(List<MappedDataItem> data) {
+        def res = []
+        data.each { item ->
+            def normItem = new NormalizedDataItem(
+                    date: item.date,
+                    type: 'Пожар',
+                    description: item.description,
+                    cause: item.description
+            )
+            LinkedList<String> address = item.address.split(',')
+            normItem.district = address.pollFirst()
+            normItem.street = address.pollFirst()
+            normItem.building = address.pollFirst()
+
+            def m = (item.address =~ /ЖЭС\-[\d]+/)
+            if(m.find()) {
+                normItem.zhes = m.group(0)
+            }
+
+            def geoPoint = geocode("город Минск, ${normItem.street}, ${normItem.building}")
+            normItem.latitude = geoPoint.latitude
+            normItem.longitude = geoPoint.longitude
+
+            res << normItem
+        }
+        return res
+    }
+
+    static private Map geocode(final String address) {
+        def geoPoint = Jsoup.connect('http://geocode-maps.yandex.ru/1.x/')
+                .data(['geocode': address]).get()
+                .select('point > pos').text()
+        LinkedList<String> geoPointSplitted = geoPoint.split(' ')
+        return [
+                longitude: geoPointSplitted.pollFirst().toDouble(),
+                latitude: geoPointSplitted.pollFirst().toDouble()
+        ]
     }
 
 
